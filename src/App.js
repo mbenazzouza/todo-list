@@ -1,25 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
 
-function App() {
+function Input({value, setValue, onSubmit}) {
+
+  function handleSubmit() {
+    onSubmit();
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+      <input type="text" 
+        className="input" 
+
+        placeholder="Task..."
+        value={value}
+        onChange={e => setValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            handleSubmit();
+          }
+      }}/>
+    );
 }
 
-export default App;
+export default function List(){
+
+
+  const [value, setValue] = useState("");
+  const [taskList, setTaskList] = useState([]);
+
+  function addTask() {
+    if (value.trim() !== "") {
+      setTaskList([...taskList, value]);
+      setValue("");
+    }
+    
+  }
+  return (
+    <div className="container">
+      <h1>Todo List</h1>
+      <Input value={value} setValue={setValue}
+             onSubmit={addTask}/>
+      <ol>
+        {taskList.map((task, index) => (
+            <li key={index}>{task}
+            <i className="fa-solid fa-trash"></i>
+            <i class="fa-solid fa-pen-to-square"></i>
+            </li>          
+        ))}
+      </ol>
+      
+    </div>
+    );
+
+}
